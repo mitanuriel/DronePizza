@@ -36,6 +36,15 @@ public class DroneController {
         return ResponseEntity.ok(drones);
     }
 
+    @PostMapping("/add")
+    public ResponseEntity<String> addDrone() {
+        try {
+            droneService.addDrone();
+            return ResponseEntity.ok("Drone successfully created.");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 
 

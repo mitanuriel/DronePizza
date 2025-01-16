@@ -2,6 +2,7 @@ package com.example.dronepizza.repositories;
 
 import com.example.dronepizza.model.Drone;
 import com.example.dronepizza.model.OperationalStatus;
+import com.example.dronepizza.model.Station;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,4 +17,6 @@ public interface DroneRepository extends JpaRepository<Drone, Long> {
 
 
     List<Drone> findByOperationalStatus(OperationalStatus operationalStatus);
+
+    int countByStation(Station station);
 }
