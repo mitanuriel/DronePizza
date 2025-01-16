@@ -1,6 +1,8 @@
 package com.example.dronepizza;
 
 import com.example.dronepizza.model.Delivery;
+import com.example.dronepizza.model.Drone;
+import com.example.dronepizza.model.OperationalStatus;
 import com.example.dronepizza.model.Pizza;
 import com.example.dronepizza.repositories.DeliveryRepository;
 import com.example.dronepizza.repositories.DroneRepository;
@@ -133,6 +135,61 @@ public class DeliveryServiceTest {
         assertEquals("789 Pine Lane", queuedDeliveries.get(1).getAddress());
 
         verify(mockDeliveryRepository, times(1)).findByDroneIsNull();
+    }
+
+    @Test
+    void scheduleDelivery_success() {
+        DeliveryRepository mockDeliveryRepository = mock(DeliveryRepository.class);
+        DroneRepository mockDroneRepository = mock(DroneRepository.class);
+        PizzaRepository mockPizzaRepository = mock(PizzaRepository.class);
+
+
+        Delivery delivery = new Delivery();
+        delivery.setDeliveryId(1L);
+        delivery.setDrone(null);
+
+        Drone drone = new Drone();
+        drone.setDroneId(1L);
+        drone.setOperationalStatus(OperationalStatus.IN_OPERATION);
+
+        when(mockDeliveryRepository.findById(1L)).thenReturn(Optional.of(delivery));
+        when(mockDroneRepository.findById(1L)).thenReturn(Optional.of(drone));
+
+        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository, mockPizzaRepository,
+                mockDroneRepository);
+
+
+        deliveryService.scheduleDelivery(1L, 1L);
+
+        assertEquals(drone, delivery.getDrone());
+        verify(mockDeliveryRepository, times(1)).save(delivery);
+    }
+
+    @Test
+    void scheduleDelivery_throwsExceptionIfDeliveryAlreadyAssigned() {
+
+        DeliveryRepository mockDeliveryRepository = mock(DeliveryRepository.class);
+        DroneRepository mockDroneRepository = mock(DroneRepository.class);
+        PizzaRepository mockPizzaRepository = mock(PizzaRepository.class);
+
+
+        Delivery delivery = new Delivery();
+        delivery.setDeliveryId(1L);
+        Drone existingDrone = new Drone();
+        existingDrone.setDroneId(2L);
+        delivery.setDrone(existingDrone);
+
+        when(mockDeliveryRepository.findById(1L)).thenReturn(Optional.of(delivery));
+
+
+        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository,mockPizzaRepository,
+                mockDroneRepository);
+
+
+        Exception exception = assertThrows(IllegalStateException.class, () -> {
+            deliveryService.scheduleDelivery(1L, 1L);
+        });
+        assertEquals("Delivery already has a drone assigned!", exception.getMessage());
     }
 }
 
