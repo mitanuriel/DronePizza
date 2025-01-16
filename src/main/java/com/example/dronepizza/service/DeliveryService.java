@@ -88,4 +88,10 @@ public class DeliveryService {
     }
 
 
+    public List<Delivery> getUndeliveredDeliveries() {
+        return deliveryRepository.findAllUndelivered();
+    }
+
+
+
 }
