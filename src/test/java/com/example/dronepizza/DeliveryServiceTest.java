@@ -1,16 +1,23 @@
 package com.example.dronepizza;
 
 import com.example.dronepizza.model.Delivery;
+import com.example.dronepizza.model.Pizza;
 import com.example.dronepizza.repositories.DeliveryRepository;
 import com.example.dronepizza.repositories.PizzaRepository;
 import com.example.dronepizza.service.DeliveryService;
 import org.junit.jupiter.api.Test;
 
+
+import static org.junit.jupiter.api.Assertions.*;
+
+
+
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 
@@ -60,6 +67,34 @@ public class DeliveryServiceTest {
 
         assertEquals(0, pendingDeliveries.size());
         verify(mockDeliveryRepository, times(1)).findByActualDeliveryIsNull();
+    }
+
+    @Test
+    void addDelivery_createsNewDeliverySuccessfully() {
+        DeliveryRepository mockDeliveryRepository = mock(DeliveryRepository.class);
+        PizzaRepository mockPizzaRepository = mock(PizzaRepository.class);
+
+        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository, mockPizzaRepository);
+
+        Pizza pizza = new Pizza();
+        pizza.setPizzaId(1L);
+
+
+        when(mockPizzaRepository.findById(1L)).thenReturn(Optional.of(pizza));
+
+        final Delivery[] savedDelivery = new Delivery[1];
+        doAnswer(invocation -> {
+            savedDelivery[0] = invocation.getArgument(0);
+            return null;
+        }).when(mockDeliveryRepository).save(any(Delivery.class));
+
+        deliveryService.addDelivery(1L);
+
+
+        assertNotNull(savedDelivery[0]);
+        assertEquals(pizza, savedDelivery[0].getPizza());
+        assertNotNull(savedDelivery[0].getExpectedDelivery());
+        assertNull(savedDelivery[0].getActualDelivery());
     }
 
 
