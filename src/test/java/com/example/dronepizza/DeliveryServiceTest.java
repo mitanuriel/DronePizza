@@ -191,6 +191,49 @@ public class DeliveryServiceTest {
         });
         assertEquals("Delivery already has a drone assigned!", exception.getMessage());
     }
+
+    @Test
+    void finishDelivery_success() {
+
+        DeliveryRepository mockDeliveryRepository = mock(DeliveryRepository.class);
+
+        Delivery delivery = new Delivery();
+        delivery.setDeliveryId(1L);
+        Drone drone = new Drone();
+        drone.setDroneId(1L);
+        delivery.setDrone(drone);
+        delivery.setActualDelivery(null);
+
+        when(mockDeliveryRepository.findById(1L)).thenReturn(Optional.of(delivery));
+
+
+        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository,null,
+                null);
+
+        deliveryService.finishDelivery(1L);
+
+        assertNotNull(delivery.getActualDelivery());
+        verify(mockDeliveryRepository, times(1)).save(delivery);
+    }
+
+    @Test
+    void finishDelivery_throwsExceptionIfNoDroneAssigned() {
+        DeliveryRepository mockDeliveryRepository = mock(DeliveryRepository.class);
+
+        Delivery delivery = new Delivery();
+        delivery.setDeliveryId(1L);
+        delivery.setDrone(null);
+
+        when(mockDeliveryRepository.findById(1L)).thenReturn(Optional.of(delivery));
+
+        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository,  null,null);
+
+        Exception exception = assertThrows(IllegalStateException.class, () -> {
+            deliveryService.finishDelivery(1L);
+        });
+        assertEquals("Delivery does not have a drone assigned!", exception.getMessage());
+    }
+
 }
 
 
