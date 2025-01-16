@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5500")
 @RequestMapping("/deliveries")
 public class DeliveryController {
 

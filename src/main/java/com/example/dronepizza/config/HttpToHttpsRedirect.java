@@ -1,4 +1,4 @@
-package com.example.dronepizza.config;
+/*package com.example.dronepizza.config;
 import org.apache.catalina.connector.Connector;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
@@ -20,4 +20,4 @@ public class HttpToHttpsRedirect {
         };
     }
 
-}
+} */
