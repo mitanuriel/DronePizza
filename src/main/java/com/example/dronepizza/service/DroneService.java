@@ -60,7 +60,16 @@ public class DroneService {
 
         drone.setOperationalStatus(OperationalStatus.IN_OPERATION);
 
-
         droneRepository.save(drone);
     }
+
+    public void disableDrone(Long id){
+        Drone drone = droneRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Drone not found with ID: " + id));
+
+        drone.setOperationalStatus(OperationalStatus.OUT_OF_OPERATION);
+        droneRepository.save(drone);
+
+    }
+
 }

@@ -56,5 +56,14 @@ public class DroneController {
         }
     }
 
+    @PostMapping("/disable/{id}")
+    public ResponseEntity<String> disableDrone(@PathVariable Long id) {
+        try {
+            droneService.disableDrone(id);
+            return ResponseEntity.ok("Drone status updated to OUT_OF_OPERATION.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 }
