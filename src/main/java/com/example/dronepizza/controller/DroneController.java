@@ -46,6 +46,15 @@ public class DroneController {
         }
     }
 
+    @PostMapping("/enable/{id}")
+    public ResponseEntity<String> enableDrone(@PathVariable Long id) {
+        try {
+            droneService.enableDrone(id);
+            return ResponseEntity.ok("Drone status updated to IN_OPERATION.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 
 }

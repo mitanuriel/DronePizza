@@ -51,4 +51,16 @@ public class DroneService {
 
          droneRepository.save(newDrone);
     }
+
+    public void enableDrone(Long id) {
+
+        Drone drone = droneRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Drone not found with ID: " + id));
+
+
+        drone.setOperationalStatus(OperationalStatus.IN_OPERATION);
+
+
+        droneRepository.save(drone);
+    }
 }
