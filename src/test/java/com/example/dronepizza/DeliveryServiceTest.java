@@ -98,4 +98,34 @@ public class DeliveryServiceTest {
     }
 
 
+    @Test
+    void getQueuedDeliveries_returnsDeliveriesWithoutDrones() {
+
+        DeliveryRepository mockDeliveryRepository = mock(DeliveryRepository.class);
+        PizzaRepository mockPizzaRepository = mock(PizzaRepository.class);
+
+        Delivery delivery1 = new Delivery();
+        delivery1.setDeliveryId(1L);
+        delivery1.setAddress("123 Main Street");
+
+        Delivery delivery2 = new Delivery();
+        delivery2.setDeliveryId(2L);
+        delivery2.setAddress("789 Pine Lane");
+
+        when(mockDeliveryRepository.findByDroneIsNull())
+                .thenReturn(Arrays.asList(delivery1, delivery2));
+
+
+        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository, mockPizzaRepository);
+
+        List<Delivery> queuedDeliveries = deliveryService.getQueuedDeliveries();
+
+        assertEquals(2, queuedDeliveries.size());
+        assertEquals("123 Main Street", queuedDeliveries.get(0).getAddress());
+        assertEquals("789 Pine Lane", queuedDeliveries.get(1).getAddress());
+
+        verify(mockDeliveryRepository, times(1)).findByDroneIsNull();
+    }
 }
+
+
