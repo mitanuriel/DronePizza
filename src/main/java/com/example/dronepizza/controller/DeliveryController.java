@@ -56,4 +56,14 @@ public class DeliveryController {
         }
     }
 
+    @PostMapping("/finish")
+    public ResponseEntity<String> finishDelivery(@RequestParam Long deliveryId) {
+        try {
+            deliveryService.finishDelivery(deliveryId);
+            return ResponseEntity.ok("Delivery finished successfully!");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

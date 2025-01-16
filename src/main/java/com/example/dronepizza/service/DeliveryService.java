@@ -39,7 +39,6 @@ public class DeliveryService {
         delivery.setAddress("Default Address");
         delivery.setDrone(null);
 
-        // Save the delivery
         deliveryRepository.save(delivery);
     }
 
@@ -52,7 +51,7 @@ public class DeliveryService {
         Delivery delivery = deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new IllegalArgumentException("Delivery not found with ID: " + deliveryId));
 
-        // Check if delivery already has a drone assigned
+
         if (delivery.getDrone() != null) {
             throw new IllegalStateException("Delivery already has a drone assigned!");
         }
@@ -73,6 +72,20 @@ public class DeliveryService {
         deliveryRepository.save(delivery);
     }
 
+
+    public void finishDelivery(Long deliveryId) {
+
+        Delivery delivery = deliveryRepository.findById(deliveryId)
+                .orElseThrow(() -> new IllegalArgumentException("Delivery not found with ID: " + deliveryId));
+
+        if (delivery.getDrone() == null) {
+            throw new IllegalStateException("Delivery does not have a drone assigned!");
+        }
+
+
+        delivery.setActualDelivery(LocalDateTime.now());
+        deliveryRepository.save(delivery);
+    }
 
 
 }
