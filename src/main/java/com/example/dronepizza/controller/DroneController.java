@@ -66,4 +66,14 @@ public class DroneController {
         }
     }
 
+    @PostMapping("/retire/{id}")
+    public ResponseEntity<String> retireDrone(@PathVariable Long id) {
+        try {
+            droneService.retireDrone(id);
+            return ResponseEntity.ok("Drone status updated to RETIRED.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

@@ -72,4 +72,12 @@ public class DroneService {
 
     }
 
+    public void retireDrone (Long id) {
+        Drone drone = droneRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Drone not found with ID: " + id));
+
+        drone.setOperationalStatus(OperationalStatus.RETIRED);
+        droneRepository.save(drone);
+    }
+
 }
