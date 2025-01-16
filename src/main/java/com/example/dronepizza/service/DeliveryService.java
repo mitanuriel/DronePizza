@@ -48,29 +48,24 @@ public class DeliveryService {
     }
 
     public void scheduleDelivery(Long deliveryId, Long droneId) {
+
         Delivery delivery = deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new IllegalArgumentException("Delivery not found with ID: " + deliveryId));
 
-
-        if (delivery.getDrone() != null) {
-            throw new IllegalStateException("Delivery already has a drone assigned!");
-        }
-
-
         Drone drone = (droneId != null)
-                ? droneRepository.findById(droneId).orElseThrow(() -> new IllegalArgumentException("Drone not found with ID: " + droneId))
+                ? droneRepository.findById(droneId)
+                .orElseThrow(() -> new IllegalArgumentException("Drone not found with ID: " + droneId))
                 : droneRepository.findFirstByOperationalStatus(OperationalStatus.IN_OPERATION)
                 .orElseThrow(() -> new IllegalStateException("No available drones in operation!"));
-
 
         if (!OperationalStatus.IN_OPERATION.equals(drone.getOperationalStatus())) {
             throw new IllegalStateException("Drone is not in operation!");
         }
 
-
         delivery.setDrone(drone);
         deliveryRepository.save(delivery);
     }
+
 
 
     public void finishDelivery(Long deliveryId) {
