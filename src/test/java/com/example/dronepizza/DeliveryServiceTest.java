@@ -2,6 +2,7 @@ package com.example.dronepizza;
 
 import com.example.dronepizza.model.Delivery;
 import com.example.dronepizza.repositories.DeliveryRepository;
+import com.example.dronepizza.repositories.PizzaRepository;
 import com.example.dronepizza.service.DeliveryService;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +20,7 @@ public class DeliveryServiceTest {
     void getPendingDeliveries_returnsPendingDeliveries() {
 
         DeliveryRepository mockDeliveryRepository = mock(DeliveryRepository.class);
+        PizzaRepository mockPizzaRepository = mock(PizzaRepository.class);
 
         Delivery delivery1 = new Delivery();
         delivery1.setDeliveryId(1L);
@@ -34,7 +36,7 @@ public class DeliveryServiceTest {
 
         when(mockDeliveryRepository.findByActualDeliveryIsNull()).thenReturn(Arrays.asList(delivery1, delivery2));
 
-        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository);
+        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository, mockPizzaRepository);
 
         List<Delivery> pendingDeliveries = deliveryService.getPendingDeliveries();
 
@@ -48,10 +50,12 @@ public class DeliveryServiceTest {
     void getPendingDeliveries_returnsEmptyListIfNoPendingDeliveries() {
 
         DeliveryRepository mockDeliveryRepository = mock(DeliveryRepository.class);
+        PizzaRepository mockPizzaRepository = mock(PizzaRepository.class);
+
 
         when(mockDeliveryRepository.findByActualDeliveryIsNull()).thenReturn(Arrays.asList());
 
-        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository);
+        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository, mockPizzaRepository);
         List<Delivery> pendingDeliveries = deliveryService.getPendingDeliveries();
 
         assertEquals(0, pendingDeliveries.size());

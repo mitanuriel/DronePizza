@@ -13,9 +13,11 @@ public class Delivery {
     private LocalDateTime expectedDelivery;
     private LocalDateTime actualDelivery;
 
+
     @ManyToOne
     @JoinColumn(name = "drone_id")
     private Drone drone;
+
 
     @ManyToOne
     @JoinColumn(name = "pizza_id")
@@ -37,7 +39,13 @@ public class Delivery {
     public void setAddress(String address) {
         this.address = address;
     }
+    public Drone getDrone() {
+        return drone;
+    }
 
+    public void setDrone(Drone drone) {
+        this.drone = drone;
+    }
 
     public LocalDateTime getExpectedDelivery() {
         return expectedDelivery;
@@ -54,6 +62,14 @@ public class Delivery {
 
     public void setActualDelivery(LocalDateTime actualDelivery) {
         this.actualDelivery = actualDelivery;
+    }
+
+    public Pizza getPizza() {
+        return pizza;
+    }
+
+    public void setPizza(Pizza pizza) {
+        this.pizza = pizza;
     }
 
 }

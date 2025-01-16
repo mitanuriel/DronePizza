@@ -3,9 +3,7 @@ package com.example.dronepizza.controller;
 import com.example.dronepizza.model.Delivery;
 import com.example.dronepizza.service.DeliveryService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,4 +23,14 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveries);
     }
 
+
+    @PostMapping("/add/{pizzaId}")
+    public ResponseEntity<String> addDelivery(@PathVariable Long pizzaId) {
+        try {
+            deliveryService.addDelivery(pizzaId);
+            return ResponseEntity.ok("Delivery successfully added.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
