@@ -3,6 +3,7 @@ package com.example.dronepizza;
 import com.example.dronepizza.model.Delivery;
 import com.example.dronepizza.model.Pizza;
 import com.example.dronepizza.repositories.DeliveryRepository;
+import com.example.dronepizza.repositories.DroneRepository;
 import com.example.dronepizza.repositories.PizzaRepository;
 import com.example.dronepizza.service.DeliveryService;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,7 @@ public class DeliveryServiceTest {
 
         DeliveryRepository mockDeliveryRepository = mock(DeliveryRepository.class);
         PizzaRepository mockPizzaRepository = mock(PizzaRepository.class);
+        DroneRepository mockDroneRepository = mock(DroneRepository.class);
 
         Delivery delivery1 = new Delivery();
         delivery1.setDeliveryId(1L);
@@ -43,7 +45,8 @@ public class DeliveryServiceTest {
 
         when(mockDeliveryRepository.findByActualDeliveryIsNull()).thenReturn(Arrays.asList(delivery1, delivery2));
 
-        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository, mockPizzaRepository);
+        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository, mockPizzaRepository,
+                mockDroneRepository);
 
         List<Delivery> pendingDeliveries = deliveryService.getPendingDeliveries();
 
@@ -58,11 +61,13 @@ public class DeliveryServiceTest {
 
         DeliveryRepository mockDeliveryRepository = mock(DeliveryRepository.class);
         PizzaRepository mockPizzaRepository = mock(PizzaRepository.class);
+        DroneRepository mockDroneRepository = mock(DroneRepository.class);
 
 
         when(mockDeliveryRepository.findByActualDeliveryIsNull()).thenReturn(Arrays.asList());
 
-        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository, mockPizzaRepository);
+        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository, mockPizzaRepository,
+                mockDroneRepository);
         List<Delivery> pendingDeliveries = deliveryService.getPendingDeliveries();
 
         assertEquals(0, pendingDeliveries.size());
@@ -73,8 +78,10 @@ public class DeliveryServiceTest {
     void addDelivery_createsNewDeliverySuccessfully() {
         DeliveryRepository mockDeliveryRepository = mock(DeliveryRepository.class);
         PizzaRepository mockPizzaRepository = mock(PizzaRepository.class);
+        DroneRepository mockDroneRepository = mock(DroneRepository.class);
 
-        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository, mockPizzaRepository);
+        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository, mockPizzaRepository,
+                mockDroneRepository);
 
         Pizza pizza = new Pizza();
         pizza.setPizzaId(1L);
@@ -103,6 +110,7 @@ public class DeliveryServiceTest {
 
         DeliveryRepository mockDeliveryRepository = mock(DeliveryRepository.class);
         PizzaRepository mockPizzaRepository = mock(PizzaRepository.class);
+        DroneRepository mockDroneRepository = mock(DroneRepository.class);
 
         Delivery delivery1 = new Delivery();
         delivery1.setDeliveryId(1L);
@@ -116,7 +124,7 @@ public class DeliveryServiceTest {
                 .thenReturn(Arrays.asList(delivery1, delivery2));
 
 
-        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository, mockPizzaRepository);
+        DeliveryService deliveryService = new DeliveryService(mockDeliveryRepository, mockPizzaRepository, mockDroneRepository);
 
         List<Delivery> queuedDeliveries = deliveryService.getQueuedDeliveries();
 

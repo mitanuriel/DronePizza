@@ -1,6 +1,9 @@
 package com.example.dronepizza.service;
 
+import com.example.dronepizza.model.Drone;
+import com.example.dronepizza.model.OperationalStatus;
 import com.example.dronepizza.model.Pizza;
+import com.example.dronepizza.repositories.DroneRepository;
 import com.example.dronepizza.repositories.PizzaRepository;
 import org.springframework.stereotype.Service;
 import com.example.dronepizza.model.Delivery;
@@ -13,10 +16,12 @@ import java.util.List;
 public class DeliveryService {
     private final DeliveryRepository deliveryRepository;
     private final PizzaRepository pizzaRepository;
+    private final DroneRepository droneRepository;
 
-    public DeliveryService(DeliveryRepository deliveryRepository, PizzaRepository pizzaRepository) {
+    public DeliveryService(DeliveryRepository deliveryRepository, PizzaRepository pizzaRepository, DroneRepository droneRepository) {
         this.deliveryRepository = deliveryRepository;
         this.pizzaRepository = pizzaRepository;
+        this.droneRepository = droneRepository;
     }
 
     public List<Delivery> getPendingDeliveries() {
@@ -30,9 +35,9 @@ public class DeliveryService {
         Delivery delivery = new Delivery();
         delivery.setPizza(pizza);
         delivery.setExpectedDelivery(LocalDateTime.now().plusMinutes(30));
-        delivery.setActualDelivery(null); // Not yet delivered
-        delivery.setAddress("Default Address"); // Placeholder, can be customized
-        delivery.setDrone(null); // No drone assigned initially
+        delivery.setActualDelivery(null);
+        delivery.setAddress("Default Address");
+        delivery.setDrone(null);
 
         // Save the delivery
         deliveryRepository.save(delivery);
@@ -41,6 +46,31 @@ public class DeliveryService {
 
     public List<Delivery> getQueuedDeliveries() {
         return deliveryRepository.findByDroneIsNull();
+    }
+
+    public void scheduleDelivery(Long deliveryId, Long droneId) {
+        Delivery delivery = deliveryRepository.findById(deliveryId)
+                .orElseThrow(() -> new IllegalArgumentException("Delivery not found with ID: " + deliveryId));
+
+        // Check if delivery already has a drone assigned
+        if (delivery.getDrone() != null) {
+            throw new IllegalStateException("Delivery already has a drone assigned!");
+        }
+
+
+        Drone drone = (droneId != null)
+                ? droneRepository.findById(droneId).orElseThrow(() -> new IllegalArgumentException("Drone not found with ID: " + droneId))
+                : droneRepository.findFirstByOperationalStatus(OperationalStatus.IN_OPERATION)
+                .orElseThrow(() -> new IllegalStateException("No available drones in operation!"));
+
+
+        if (!OperationalStatus.IN_OPERATION.equals(drone.getOperationalStatus())) {
+            throw new IllegalStateException("Drone is not in operation!");
+        }
+
+
+        delivery.setDrone(drone);
+        deliveryRepository.save(delivery);
     }
 
 

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/deliveries")
@@ -39,4 +40,20 @@ public class DeliveryController {
         List<Delivery> queuedDeliveries = deliveryService.getQueuedDeliveries();
         return ResponseEntity.ok(queuedDeliveries);
     }
+
+    @PostMapping("/schedule")
+    public ResponseEntity<String> scheduleDelivery(@RequestBody Map<String, Object> requestBody) {
+        try {
+            Long deliveryId = Long.valueOf(requestBody.get("deliveryId").toString());
+            Long droneId = requestBody.get("droneId") != null
+                    ? Long.valueOf(requestBody.get("droneId").toString())
+                    : null;
+
+            deliveryService.scheduleDelivery(deliveryId, droneId);
+            return ResponseEntity.ok("Delivery scheduled successfully!");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

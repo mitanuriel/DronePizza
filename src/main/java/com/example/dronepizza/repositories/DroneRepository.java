@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DroneRepository extends JpaRepository<Drone, Long> {
@@ -19,4 +20,6 @@ public interface DroneRepository extends JpaRepository<Drone, Long> {
     List<Drone> findByOperationalStatus(OperationalStatus operationalStatus);
 
     int countByStation(Station station);
+
+    Optional<Drone> findFirstByOperationalStatus(OperationalStatus operationalStatus);
 }
