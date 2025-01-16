@@ -39,5 +39,10 @@ public class DeliveryService {
     }
 
 
+    public List<Delivery> getQueuedDeliveries() {
+        return deliveryRepository.findByDroneIsNull();
+    }
+
+
 
 }

@@ -33,4 +33,10 @@ public class DeliveryController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/queue")
+    public ResponseEntity<List<Delivery>> getQueuedDeliveries() {
+        List<Delivery> queuedDeliveries = deliveryService.getQueuedDeliveries();
+        return ResponseEntity.ok(queuedDeliveries);
+    }
 }
