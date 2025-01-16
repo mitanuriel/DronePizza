@@ -13,6 +13,7 @@ public class Drone {
     private String serialUuid;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private OperationalStatus operationalStatus;
 
     @ManyToOne
@@ -45,5 +46,15 @@ public class Drone {
     public void setStation(Station station) {
         this.station = station;
     }
+
+
+    public OperationalStatus getOperationalStatus() {
+        return operationalStatus;
+    }
+
+    public void setOperationalStatus(OperationalStatus operationalStatus) {
+        this.operationalStatus = operationalStatus;
+    }
+
 
 }

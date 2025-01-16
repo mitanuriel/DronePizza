@@ -17,12 +17,12 @@ public class DroneController {
         this.droneService = droneService;
     }
 
-
     @GetMapping
     public ResponseEntity<List<Drone>> getAllDrones() {
         List<Drone> drones = droneService.getAllDrones();
         return ResponseEntity.ok(drones);
     }
+
 
     @GetMapping("/uuids")
     public ResponseEntity<List<String>> getAllUuids() {
