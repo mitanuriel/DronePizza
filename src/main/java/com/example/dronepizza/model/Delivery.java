@@ -23,6 +23,8 @@ public class Delivery {
     @JoinColumn(name = "pizza_id")
     private Pizza pizza;
 
+    private String status;
+
 
     public Long getDeliveryId() {
         return deliveryId;
@@ -70,6 +72,14 @@ public class Delivery {
 
     public void setPizza(Pizza pizza) {
         this.pizza = pizza;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }

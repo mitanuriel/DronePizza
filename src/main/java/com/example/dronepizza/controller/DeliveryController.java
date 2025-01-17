@@ -29,12 +29,15 @@ public class DeliveryController {
     @PostMapping("/add/{pizzaId}")
     public ResponseEntity<String> addDelivery(@PathVariable Long pizzaId) {
         try {
+            System.out.println("Pizza ID received: " + pizzaId); // Log the pizzaId
             deliveryService.addDelivery(pizzaId);
             return ResponseEntity.ok("Delivery successfully added.");
         } catch (IllegalArgumentException e) {
+            System.err.println("Error adding delivery: " + e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     @GetMapping("/queue")
     public ResponseEntity<List<Delivery>> getQueuedDeliveries() {
@@ -45,17 +48,28 @@ public class DeliveryController {
     @PostMapping("/schedule")
     public ResponseEntity<String> scheduleDelivery(@RequestBody Map<String, Object> requestBody) {
         try {
+            // Log the received request body
+            System.out.println("Request Body: " + requestBody);
+
             Long deliveryId = Long.valueOf(requestBody.get("deliveryId").toString());
             Long droneId = requestBody.get("droneId") != null
                     ? Long.valueOf(requestBody.get("droneId").toString())
                     : null;
 
+            // Log extracted values
+            System.out.println("Delivery ID: " + deliveryId);
+            System.out.println("Drone ID: " + droneId);
+
             deliveryService.scheduleDelivery(deliveryId, droneId);
             return ResponseEntity.ok("Delivery scheduled successfully!");
         } catch (IllegalArgumentException | IllegalStateException e) {
+            System.err.println("Error: " + e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
+
+
         }
     }
+
 
     @PostMapping("/finish")
     public ResponseEntity<String> finishDelivery(@RequestParam Long deliveryId) {
@@ -67,10 +81,21 @@ public class DeliveryController {
         }
     }
 
+    @PostMapping("/finish2")
+    public ResponseEntity<String> finishDelivery2(@RequestParam Long deliveryId) {
+        try {
+            deliveryService.finishDelivery(deliveryId);
+            return ResponseEntity.ok("Delivery completed successfully!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/undelivered")
     public ResponseEntity<List<Delivery>> getUndeliveredDeliveries() {
         List<Delivery> deliveries = deliveryService.getUndeliveredDeliveries();
         return ResponseEntity.ok(deliveries);
     }
+
 
 }

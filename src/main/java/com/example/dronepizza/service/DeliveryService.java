@@ -28,20 +28,25 @@ public class DeliveryService {
         return deliveryRepository.findByActualDeliveryIsNull();
     }
 
-    public void addDelivery(Long pizzaId){
+    public void addDelivery(Long pizzaId) {
+        // Find the pizza by ID
         Pizza pizza = pizzaRepository.findById(pizzaId)
                 .orElseThrow(() -> new IllegalArgumentException("Pizza not found with ID: " + pizzaId));
 
+        // Log the pizza details
+        System.out.println("Pizza found: " + pizza);
+
+        // Create a new delivery object
         Delivery delivery = new Delivery();
-        delivery.setPizza(pizza);
-        delivery.setExpectedDelivery(LocalDateTime.now().plusMinutes(30));
-        delivery.setActualDelivery(null);
-        delivery.setAddress("Default Address");
-        delivery.setDrone(null);
+        delivery.setPizza(pizza); // Associate the pizza with the delivery
+        delivery.setStatus("PENDING"); // Set status as pending
 
+        // Save the delivery to the database
         deliveryRepository.save(delivery);
-    }
 
+        // Log the saved delivery
+        System.out.println("Delivery created: " + delivery);
+    }
 
     public List<Delivery> getQueuedDeliveries() {
         return deliveryRepository.findByDroneIsNull();
@@ -81,6 +86,19 @@ public class DeliveryService {
         delivery.setActualDelivery(LocalDateTime.now());
         deliveryRepository.save(delivery);
     }
+
+    public void finishDelivery2(Long deliveryId) {
+        // Find the delivery by ID
+        Delivery delivery = deliveryRepository.findById(deliveryId)
+                .orElseThrow(() -> new IllegalArgumentException("Delivery not found with ID: " + deliveryId));
+
+        // Update the delivery status to "COMPLETED"
+        delivery.setStatus("COMPLETED");
+
+        // Save the updated delivery
+        deliveryRepository.save(delivery);
+    }
+
 
 
     public List<Delivery> getUndeliveredDeliveries() {
