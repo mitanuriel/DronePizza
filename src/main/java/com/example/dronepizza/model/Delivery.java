@@ -3,28 +3,28 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "delivery")
 public class Delivery {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long deliveryId;
+
     private String address;
     private LocalDateTime expectedDelivery;
     private LocalDateTime actualDelivery;
 
 
     @ManyToOne
-    @JoinColumn(name = "drone_id")
+    @JoinColumn(name = "drone_id", nullable = true)
     private Drone drone;
 
 
     @ManyToOne
-    @JoinColumn(name = "pizza_id")
+    @JoinColumn(name = "pizza_id", nullable = true)
     private Pizza pizza;
 
     private String status;
-
 
     public Long getDeliveryId() {
         return deliveryId;

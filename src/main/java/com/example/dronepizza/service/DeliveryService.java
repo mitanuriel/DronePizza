@@ -18,7 +18,9 @@ public class DeliveryService {
     private final PizzaRepository pizzaRepository;
     private final DroneRepository droneRepository;
 
-    public DeliveryService(DeliveryRepository deliveryRepository, PizzaRepository pizzaRepository, DroneRepository droneRepository) {
+    public DeliveryService(DeliveryRepository deliveryRepository,
+                           PizzaRepository pizzaRepository,
+                           DroneRepository droneRepository) {
         this.deliveryRepository = deliveryRepository;
         this.pizzaRepository = pizzaRepository;
         this.droneRepository = droneRepository;
@@ -29,23 +31,23 @@ public class DeliveryService {
     }
 
     public void addDelivery(Long pizzaId) {
-        // Find the pizza by ID
+
+        System.out.println("Pizza ID received: " + pizzaId);
+
         Pizza pizza = pizzaRepository.findById(pizzaId)
                 .orElseThrow(() -> new IllegalArgumentException("Pizza not found with ID: " + pizzaId));
 
-        // Log the pizza details
         System.out.println("Pizza found: " + pizza);
 
-        // Create a new delivery object
         Delivery delivery = new Delivery();
-        delivery.setPizza(pizza); // Associate the pizza with the delivery
-        delivery.setStatus("PENDING"); // Set status as pending
+        delivery.setPizza(pizza);
+        delivery.setStatus("PENDING");
+        delivery.setAddress("Default Address");
+        delivery.setExpectedDelivery(LocalDateTime.now().plusHours(1));
 
-        // Save the delivery to the database
+        System.out.println("Attempting to save delivery...");
         deliveryRepository.save(delivery);
-
-        // Log the saved delivery
-        System.out.println("Delivery created: " + delivery);
+        System.out.println("Delivery saved correctly: " + delivery);
     }
 
     public List<Delivery> getQueuedDeliveries() {

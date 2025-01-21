@@ -2,11 +2,11 @@ package com.example.dronepizza.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table (name = "pizza")
 public class Drone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long droneId;
 
     @Column(unique = true, nullable = false)

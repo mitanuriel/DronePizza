@@ -2,12 +2,13 @@ package com.example.dronepizza.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "station")
 public class Station {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long stationId;
+
     private Double latitude;
     private Double longitude;
 
