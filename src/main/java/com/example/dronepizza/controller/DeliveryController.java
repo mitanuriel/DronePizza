@@ -91,11 +91,5 @@ public class DeliveryController {
         }
     }
 
-    @GetMapping("/undelivered")
-    public ResponseEntity<List<Delivery>> getUndeliveredDeliveries() {
-        List<Delivery> deliveries = deliveryService.getUndeliveredDeliveries();
-        return ResponseEntity.ok(deliveries);
-    }
-
 
 }
