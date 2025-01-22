@@ -1,5 +1,5 @@
-Drone Pizza - Mock of Drone delivery service
-Overview
+Drone Pizza - Mock of Drone delivery service.
+
 Drone Pizza is a web application for a drone  pizza delivery, built with Spring Boot and Java Script. 
 
 Setup.
